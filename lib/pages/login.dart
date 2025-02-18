@@ -1,3 +1,4 @@
+import 'package:allou_app/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../components/custom_text_field.dart';
@@ -41,9 +42,22 @@ class LoginPage extends StatelessWidget {
 
   LoginPage({super.key, required this.toggleView});
 
-  void login() {
-    print('Email: ${_emailController.text}');
-    print('Password: ${_passwordController.text}');
+  void login(BuildContext context) async {
+    final authService = AuthService();
+
+    try {
+      await authService.signInWithEmailPassword(
+        _emailController.text,
+        _passwordController.text,
+      );
+      if (!context.mounted) return;
+    } catch (error) {
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(title: Text(error.toString())),
+      );
+    }
   }
 
   @override
@@ -76,7 +90,7 @@ class LoginPage extends StatelessWidget {
               isObscure: true,
             ),
             const SizedBox(height: 20),
-            LoginButton(title: 'Login', onTap: login),
+            LoginButton(title: 'Login', onTap: () => login(context)),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () => toggleView(),

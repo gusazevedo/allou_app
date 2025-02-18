@@ -1,9 +1,8 @@
+import 'package:allou_app/auth/auth_gate.dart';
 import 'package:allou_app/firebase_options.dart';
 import 'package:allou_app/utils/light_mode.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'auth/login_or_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      home: LoginOrRegister(),
+      home: AuthGate(),
     );
   }
 }
