@@ -1,3 +1,4 @@
+import 'package:allou_app/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../components/custom_text_field.dart';
@@ -42,6 +43,31 @@ class RegisterPage extends StatelessWidget {
 
   RegisterPage({super.key, required this.toggleView});
 
+  void register(BuildContext context) async {
+    final authService = AuthService();
+
+    if (_passwordController.text == _confirmPwController.text) {
+      try {
+        await authService.signUpEmailPassword(
+          _emailController.text,
+          _passwordController.text,
+        );
+      } catch (error) {
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(title: Text(error.toString())),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(title: Text('Passwords do not match')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,14 +104,7 @@ class RegisterPage extends StatelessWidget {
               isObscure: true,
             ),
             const SizedBox(height: 20),
-            RegisterButton(
-              title: 'Register',
-              onTap: () {
-                print('Email: ${_emailController.text}');
-                print('Password: ${_passwordController.text}');
-                print('Confirm Password: ${_confirmPwController.text}');
-              },
-            ),
+            RegisterButton(title: 'Register', onTap: () => register(context)),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () => toggleView(),
